@@ -85,20 +85,28 @@ function remove(nimporte) {
 // je créer un tableau de couleur 
 var black = ["black"]
 var couleur = ["blue","red","pink","yellow","purple","orange","green","Aqua","Gray","silver"];
-var forme = ["carrer","rond","triangle"]
+// var forme = ["carrer","rond","triangle"]
 var taille = ["2vh","3vh","4vh","5vh","4.5vh","5.5vh","3.5vh","6.5vh","6vh"];
 var compteur= 0
+var nbDivNoir = ["3","20","70"];
+var nbNiveaux = 0;
+var temps = 0;
+var intervalTimer = null;
 
-
+var score = document.createElement("div");
+haut.appendChild(score);
+score.className = "score";
 // je génére un bc de div à 20 pour le noob 
 
     function btnNoob(){
+        clearInterval(intervalTimer);
+        nbNiveaux = 0;
+        temps = 90;
         remove(document.querySelector(".jeux"));
+        intervalTimer = setInterval(timer,1000);   
         compteur = 0;
-        var score = document.createElement("div");
-        haut.appendChild(score);
-        score.className = "score";
-         for (i=0; i<20; i++){
+        
+        for (i=0; i<20; i++){
 
         var newDiv = document.createElement("div");
         jeux.appendChild(newDiv);
@@ -131,8 +139,8 @@ var compteur= 0
         newDiv.style.left = xaleatoire + "vw";
         newDiv.style.top = yaleatoire + "vh";
                 
-                
-
+             
+        
         }
         var game = document.body.querySelector(".jeux");
         var carrer = game.querySelectorAll("div");
@@ -143,7 +151,7 @@ var compteur= 0
             bouger(carrer);
             console.log(compteur+ " ceci est le compteur");
 
-            score.textContent=("timer " +" score : "+compteur+" points ");
+            score.textContent=("timer: "+temps+ " score : "+compteur+" points ");
         });
         
         
@@ -152,12 +160,12 @@ var compteur= 0
     }
 
     function btnhardcore(){
-        
+        clearInterval(intervalTimer);
+        nbNiveaux = 1;
+        temps = 45;
+        intervalTimer = setInterval(timer,1000); 
          remove(document.querySelector(".jeux"));
          compteur = 0;
-         var score = document.createElement("div");
-        haut.appendChild(score);
-        score.className = "score";
             for (i=0; i<80; i++){
     
             var newDiv = document.createElement("div");
@@ -203,7 +211,7 @@ var compteur= 0
                 bouger(carrer);
                 console.log(compteur+ " ceci est le compteur");
 
-                score.textContent=("timer " +" score "+compteur+" points ");
+                score.textContent=("timer: " + temps +" score "+compteur+" points ");
         });
     }
             
@@ -214,12 +222,13 @@ var compteur= 0
 
 
     function btnultraviolence(){
+        clearInterval(intervalTimer);
+        nbNiveaux = 2;
+        temps = 30;
+        intervalTimer = setInterval(timer,1000); 
         remove(document.querySelector(".jeux"));
         compteur = 0;
-        var score = document.createElement("div");
-        haut.appendChild(score);
-        score.className = "score";
-            for (i=0; i<80; i++){
+            for (i=0; i<200; i++){
     
             var newDiv = document.createElement("div");
             jeux.appendChild(newDiv);
@@ -227,7 +236,7 @@ var compteur= 0
     
             // ON REND LA COULEUR ALEATOIRE à chaque fois que i fait un tour
             
-            if (i< 20){
+            if (i< 70){
                 newDiv.style.backgroundColor = black[0]
             }else{
             
@@ -263,7 +272,7 @@ var compteur= 0
                 destruction(this);
                 bouger(carrer);
                 console.log(compteur+ " ceci est le compteur");
-                score.textContent=("timer " +" score "+compteur+" points ");
+                score.textContent=("timer: " +temps +" score "+compteur+" points ");
         });
     }
             
@@ -276,13 +285,21 @@ var compteur= 0
 
 function destruction(autrechose) {
     autrechose.remove();
-    
+    var nombreDeDiv = document.getElementsByClassName("forme");
+    console.log(nombreDeDiv.length);
+    console.log(nbDivNoir[nbNiveaux]);
     if (autrechose.style.backgroundColor == black){
         alert("TA PERDU! tu as fait " + compteur + " points !");
         remove(document.querySelector(".jeux"));
+        clearInterval(intervalTimer);
     } else {
         compteur = compteur + 1;
     }
+    if (nombreDeDiv.length == nbDivNoir[nbNiveaux]) {
+        alert("win");
+        clearInterval(intervalTimer);
+    }
+
 
     // si nb forme = nb forme noire = victoire + score
 }
@@ -301,5 +318,20 @@ function bouger(parametre){
 
 
 
+// function timer(){
 
 
+// var temps = ["90","60","30"];
+
+// }
+
+
+function timer() {
+    temps--;
+    console.log(temps);
+    score.textContent=("timer: "+temps+ " score : "+compteur+" points " )
+    if (temps == 0) {
+        alert("perdu");
+        clearInterval(intervalTimer);
+    }
+}
